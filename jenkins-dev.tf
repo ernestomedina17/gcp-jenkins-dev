@@ -5,14 +5,15 @@ provider "google" {
   # zone	= CLOUDSDK_COMPUTE_ZONE
 }
 
-resource "google_compute_instance" "nginx_httpd" {
-  name         = "nginx_httpd"
+resource "google_compute_instance" "nginx-httpd" {
+  name         = "nginx-httpd"
   machine_type = "g1-small"
   tags = ["web"]
 
   boot_disk {
     initialize_params {
-      image = "rhel-cloud/rhel7-ansible"
+      # image = "rhel-cloud/rhel7-ansible"
+      image = "rhel7-ansible"
     }
   }
 
@@ -45,11 +46,11 @@ resource "google_compute_instance" "nginx_httpd" {
       type        = "ssh"
       user        = var.ssh_user
       private_key = file(var.private_key_path)
-      host        = google_compute_instance.nginx_httpd.network_interface.0.access_config.0.nat_ip
+      host        = google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${google_compute_instance.nginx_httpd.network_interface.0.access_config.0.nat_ip},' --private-key ${var.private_key_path} nginx_httpd.yml"
+    command = "ansible-playbook -u '${var.ssh_user}' -i '${google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip},' --private-key ${var.private_key_path} -e 'public_ip=${google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip}' nginx-httpd.yml"
   }
 }
 
