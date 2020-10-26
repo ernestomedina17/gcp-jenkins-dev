@@ -1,0 +1,27 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "jenkins-dev-293703",
+      "source_image": "rhel-7-v20201014",
+      "ssh_username": "packer",
+      "zone": "us-central1-f",
+      "image_name": "rhel7-ansible",
+      "image_description": "yum -y update; yum -y install ansible",
+      "image_family": "rhel-cloud"
+    }
+  ],
+  "provisioners": [
+    {
+      "type":  "shell",
+      "environment_vars": ["FOO=foo",
+                           "BAR=\"bar\""],
+      "inline": ["echo \"FOO is $FOO\"",
+                 "echo \"BAR is $BAR\"",
+		 "uname -a",
+		 "echo 'Installing ansible'",
+      		 "sudo yum -y update",
+                 "sudo yum -y install ansible"]
+    }
+  ]
+}

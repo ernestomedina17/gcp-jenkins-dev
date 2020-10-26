@@ -1,0 +1,22 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "jenkins-dev-293703",
+      "source_image": "rhel-7-v20201014",
+      "ssh_username": "packer",
+      "zone": "us-central1-f",
+      "image_name": "rhel7-jenkins",
+      "image_description": "Jenkins Master",
+      "image_family": "rhel-cloud"
+
+    }
+  ],
+  "provisioners": [
+    {
+      "type":            "ansible-local",
+      "playbook_file":   "./playbook.yml",
+      "extra_arguments": ["--extra-vars", "\"pizza_toppings={{ user `topping`}}\""]
+    }
+  ]
+}
