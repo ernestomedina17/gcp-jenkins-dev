@@ -5,5 +5,5 @@ variable "private_key_path" {
 
 variable "ssh_user" {
   description = "SVC which has roles/compute.osAdminLogin to ssh your instance."
-  default     = "sa_111568328216108188906"
+  # default     = TF_VAR_SSH_USERNAME environment variable
 }

@@ -1,14 +1,21 @@
 {
+  "variables": {
+    "my_project": "{{env `CLOUDSDK_CORE_PROJECT`}}",
+    "my_ssh_username": "{{env `TF_VAR_SSH_USERNAME`}}"
+  },
+
   "builders": [
     {
       "type": "googlecompute",
-      "project_id": "jenkins-dev-293703",
+      "project_id": "{{user `my_project`}}",
       "source_image": "rhel-7-v20201014",
-      "ssh_username": "packer",
+      "ssh_username": "{{user `my_ssh_username`}}",
       "zone": "us-central1-f",
       "image_name": "rhel7-ansible",
       "image_description": "yum -y update; yum -y install ansible",
-      "image_family": "rhel-cloud"
+      "image_family": "rhel-cloud",
+      "use_os_login": "true",
+      "ssh_private_key_file": "~/.ssh/google_compute_engine"
     }
   ],
   "provisioners": [
