@@ -12,6 +12,6 @@ resource "google_compute_firewall" "default" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["web", "jenkins"]
+  target_tags   = ["web", "jenkins", "jenkins-agent"]
 }
 

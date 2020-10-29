@@ -20,6 +20,9 @@
       - git
       - kubernetes 
       - google-kubernetes-engine
+      - pipeline-aggregator-view
+      - pipeline-model-definition
+      - declarative-pipeline-migration-assistant
     jenkins_admin_username: ernesto
     jenkins_admin_password: '{{ secret }}'
     jenkins_hostname: "{{ public_ip }}" 

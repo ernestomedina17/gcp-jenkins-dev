@@ -1,0 +1,21 @@
+---
+- hosts: "{{ public_ip }}"
+  become: true
+  vars:
+    java_packages:
+      - java-1.8.0-openjdk
+  roles:
+    - role: geerlingguy.java
+  tasks:
+  - name: install git
+    yum:
+      name: git
+      state: latest
+  - name: install maven
+    yum:
+      name: maven
+      state: latest
+  - name: install python3
+    yum:
+      name: python3
+      state: latest

@@ -38,7 +38,7 @@ resource "google_compute_instance" "nginx-httpd" {
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -u '${var.SSH_USERNAME}' -i '${data.google_compute_address.mariana.address},' --private-key ${var.private_key_path} -e 'public_ip=${data.google_compute_address.mariana.address}' -e 'jenkins_ip=${google_compute_instance.jenkins-dev.network_interface.0.network_ip}' nginx-httpd.yml"
+    command = "ansible-playbook -u '${var.SSH_USERNAME}' -i '${data.google_compute_address.mariana.address},' --private-key ${var.private_key_path} -e 'public_ip=${data.google_compute_address.mariana.address}' -e 'jenkins_ip=${google_compute_instance.jenkins-master.network_interface.0.network_ip}' nginx-httpd.yml"
   }
 }
 
