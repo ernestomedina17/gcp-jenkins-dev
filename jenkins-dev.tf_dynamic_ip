@@ -24,8 +24,7 @@ resource "google_compute_instance" "nginx-httpd" {
     network = "default"
 
     access_config {
-      nat_ip = "34.121.97.143"
-      public_ptr_domain_name = "mariannmiranda.com"
+      // Ephemeral IP
     }
   }
 
@@ -45,13 +44,13 @@ resource "google_compute_instance" "nginx-httpd" {
 
     connection {
       type        = "ssh"
-      user        = var.SSH_USERNAME
+      user        = var.ssh_user
       private_key = file(var.private_key_path)
       host        = google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -u '${var.SSH_USERNAME}' -i '${var.RESERVED_IP},' --private-key ${var.private_key_path} -e 'public_ip=${var.RESERVED_IP}' nginx-httpd.yml"
+    command = "ansible-playbook -u '${var.ssh_user}' -i '${google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip},' --private-key ${var.private_key_path} -e 'public_ip=${google_compute_instance.nginx-httpd.network_interface.0.access_config.0.nat_ip}' nginx-httpd.yml"
   }
 }
 

@@ -77,6 +77,14 @@
       group: apache
       mode: '0644'
 
+  - name: Copy googlebd652198516d6686.html verification file
+    copy:
+      src: googlebd652198516d6686.html
+      dest: /var/www/html/googlebd652198516d6686.html
+      owner: apache
+      group: apache
+      mode: '0644'
+
   # Nginx 
   - name: install the latest version of Nginx
     yum:

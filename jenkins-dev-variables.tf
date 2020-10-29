@@ -3,7 +3,13 @@ variable "private_key_path" {
   default     = "~/.ssh/google_compute_engine"
 }
 
-variable "ssh_user" {
+variable "SSH_USERNAME" {
   description = "SVC which has roles/compute.osAdminLogin to ssh your instance."
   # default     = TF_VAR_SSH_USERNAME environment variable
 }
+
+variable "RESERVED_IP" {
+  description = "SVC which has roles/compute.osAdminLogin to ssh your instance."
+  # default     = TF_VAR_RESERVED_IP environment variable
+}
+
