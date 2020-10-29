@@ -31,7 +31,7 @@ resource "google_compute_instance" "jenkins-dev" {
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook --vault-password-file ~/secret -u '${var.SSH_USERNAME}' -i '${google_compute_instance.jenkins-dev.network_interface.0.access_config.0.nat_ip},' --private-key ${var.private_key_path} -e 'public_ip=${google_compute_instance.jenkins-dev.network_interface.0.access_config.0.nat_ip}' jenkins-dev.yml"
+    command = "ansible-playbook --vault-password-file ~/secret -u '${var.SSH_USERNAME}' -i '${google_compute_instance.jenkins-dev.network_interface.0.access_config.0.nat_ip},' --private-key ${var.private_key_path} -e 'public_ip=${google_compute_instance.jenkins-dev.network_interface.0.access_config.0.nat_ip}' jenkins.yml"
   }
 }
 
