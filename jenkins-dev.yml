@@ -22,7 +22,7 @@
       - google-kubernetes-engine
     jenkins_admin_username: ernesto
     jenkins_admin_password: '{{ secret }}'
-    jenkins_hostname: jenkins.mariannmiranda.com
+    jenkins_hostname: "{{ public_ip }}" 
     java_packages:
       - java-1.8.0-openjdk
   roles:
