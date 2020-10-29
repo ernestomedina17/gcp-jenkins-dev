@@ -1,0 +1,36 @@
+---
+- hosts: "{{ public_ip }}"
+  become: true
+  vars:
+    secret: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          37336564366466653838613635396238653066353063616531303664653835333863383061663038
+          6339353264376530373833623938616531373832383032380a336436383761366139646566306264
+          37353231636130383137393430663732343464616166656462336162666164643934646332333730
+          6136386335623633380a373433623032306136613963356530386431363032313963336238383033
+          6166
+    jenkins_plugins:
+      - ssh-slaves 
+      - windows-slaves
+      - powershell
+      - workflow-job
+      - workflow-multibranch
+      - ssh-credentials 
+      - ssh
+      - git
+      - kubernetes 
+      - google-kubernetes-engine
+    jenkins_admin_username: ernesto
+    jenkins_admin_password: '{{ secret }}'
+    jenkins_hostname: jenkins.mariannmiranda.com
+    java_packages:
+      - openjdk-8-jdk
+  roles:
+    - role: geerlingguy.java
+    - role: geerlingguy.jenkins
+  tasks:
+  - name: install git
+    yum:
+      name: git
+      state: latest
+
