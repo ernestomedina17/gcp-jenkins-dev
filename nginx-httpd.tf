@@ -1,10 +1,3 @@
-provider "google" {
-  # credentials = GOOGLE_APPLICATION_CREDENTIALS
-  # project     = CLOUDSDK_CORE_PROJECT
-  # region      = CLOUDSDK_COMPUTE_REGIONT
-  # zone	= CLOUDSDK_COMPUTE_ZONE
-}
-
 data "google_compute_address" "mariana" {
   name = "mariana"
 }
@@ -47,22 +40,5 @@ resource "google_compute_instance" "nginx-httpd" {
   provisioner "local-exec" {
     command = "ansible-playbook -u '${var.SSH_USERNAME}' -i '${data.google_compute_address.mariana.address},' --private-key ${var.private_key_path} -e 'public_ip=${data.google_compute_address.mariana.address}' -e 'jenkins_ip=${google_compute_instance.jenkins-dev.network_interface.0.network_ip}' nginx-httpd.yml"
   }
-}
-
-resource "google_compute_firewall" "default" {
-  name    = "web-firewall"
-  network = "default"
-
-  allow {
-    protocol = "icmp"
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "443"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["web"]
 }
 
