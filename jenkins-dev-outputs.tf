@@ -1,3 +1,4 @@
 output "Webapp_URL" {
-  value = "http://${var.RESERVED_IP}"
+  value = "http://${data.google_compute_address.mariana.address}"
 }
+
