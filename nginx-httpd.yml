@@ -1,8 +1,30 @@
----
 - name: Install Nginx and Apache with Nginx SSL Termination
   hosts: "{{ public_ip }}"
+  gather_facts: true
   become: yes
+
+  vars:
+    certbot_admin_email: ernestomedina17@gmail.com
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services: []
+    certbot_certs:
+      - domains:
+          - jenkins.mariannmiranda.com
+      - domains:
+          - mariannmiranda.com
+  pre_tasks:
+    - name: Install dependencies (RedHat).
+      yum:
+        name: ['cronie', 'epel-release']
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+  roles:
+    - geerlingguy.certbot
+
   tasks:
+  - name: Flush handlers in case any configs have changed.
+    meta: flush_handlers
 
   # SELinux
   - name: Set httpd_can_network_connect flag on and keep it persistent across reboots
@@ -91,33 +113,13 @@
       name: nginx
       state: latest
   
-  - name: Template a file to /etc/nginx/nginx.conf
+  - name: Final nginx config Template to /etc/nginx/nginx.conf
     template:
       src: nginx.conf.j2
       dest: /etc/nginx/nginx.conf
       owner: root
       group: root
       mode: '0644'
-  
-  - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
-    openssl_privatekey:
-      path: /etc/ssl/certs/localhost.key
-  
-  - name: Generate an OpenSSL Certificate Signing Request with Subject information
-    openssl_csr:
-      path: /etc/ssl/certs/localhost.csr
-      privatekey_path: /etc/ssl/certs/localhost.key
-      country_name: MX
-      organization_name: DevOps
-      email_address: ernestomedina17@gmail.com
-      common_name: localhost
-
-  - name: Generate a Self Signed OpenSSL certificate
-    openssl_certificate:
-      path: /etc/ssl/certs/localhost.crt
-      privatekey_path: /etc/ssl/certs/localhost.key
-      csr_path: /etc/ssl/certs/localhost.csr
-      provider: selfsigned
 
   - name: enable service nginx and ensure it is not masked
     systemd:
@@ -130,8 +132,22 @@
       name: nginx
       state: reloaded
 
-  - name: Make sure a service is running
+  - name: Make sure a nginx is running
     systemd:
       state: started
       name: nginx
+
+  - name: Test secure connection to SSL sub domain.
+    uri:
+      url: https://jenkins.mariannmiranda.com/
+      status_code: 200
+    delegate_to: localhost
+    become: false
+
+  - name: Test secure connection to SSL domain.
+    uri:
+      url: https://mariannmiranda.com/
+      status_code: 200
+    delegate_to: localhost
+    become: false
 
